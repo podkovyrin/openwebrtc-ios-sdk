@@ -61,7 +61,7 @@ static bool is_offering = NO;
 
 static void got_local_sources(GList *sources);
 
-static OpenWebRTCNativeHandler *staticSelf;
+static __weak OpenWebRTCNativeHandler *staticSelf;
 
 @interface OpenWebRTCNativeHandler ()
 {
