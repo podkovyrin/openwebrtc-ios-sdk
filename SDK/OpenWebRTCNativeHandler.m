@@ -42,8 +42,12 @@
 #include "owr_window_registry.h"
 #include "owr_types.h"
 
-#define SELF_VIEW_TAG "self-view"
-#define REMOTE_VIEW_TAG "remote-view"
+static NSInteger kViewTagCount = 0;
+static const gchar *get_self_view_tag();
+static const gchar *get_remote_view_tag();
+
+#define SELF_VIEW_TAG get_self_view_tag()
+#define REMOTE_VIEW_TAG get_remote_view_tag()
 
 OwrVideoRenderer *local_video_renderer;
 OwrVideoRenderer *remote_video_renderer;
@@ -88,6 +92,8 @@ static OpenWebRTCNativeHandler *staticSelf;
         staticSelf = self;
         _delegate = delegate;
         _settings = [[OpenWebRTCSettings alloc] initWithDefaults];
+        
+        kViewTagCount++;
     }
     return self;
 }
@@ -621,6 +627,17 @@ static OpenWebRTCNativeHandler *staticSelf;
 }
 
 #pragma mark - C stuff
+
+static const gchar *get_self_view_tag() {
+    NSString *s = [NSString stringWithFormat:@"self-view-tag-%ld", (long)kViewTagCount];
+    return [s UTF8String];
+}
+
+static const gchar *get_remote_view_tag() {
+    NSString *s = [NSString stringWithFormat:@"remote-view-tag-%ld", (long)kViewTagCount];
+    return [s UTF8String];
+}
+
 
 static void got_remote_source(OwrMediaSession *media_session, OwrMediaSource *source,
                               gpointer user_data)
