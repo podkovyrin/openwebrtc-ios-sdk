@@ -46,17 +46,19 @@
             owr_init(NULL);
             owr_run_in_background();
 
-            NSError* theError = nil;
-            AVAudioSession *myAudioSession = [AVAudioSession sharedInstance];
-            BOOL result = [myAudioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:&theError];
-
+            AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+            
+            NSError *error = nil;
+            AVAudioSessionCategoryOptions options = AVAudioSessionCategoryOptionDefaultToSpeaker | AVAudioSessionCategoryOptionAllowBluetooth;
+            BOOL result = [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:options error:&error];
             if (!result) {
-                NSLog(@"[OpenWebRTC] ERROR! AVAudioSession setCategory failed");
+                NSLog(@"[OpenWebRTC] ERROR! AVAudioSession setCategory failed %@", error);
             }
-
-            result = [myAudioSession setActive:YES error:&theError];
+            
+            error = nil;
+            result = [audioSession setActive:YES error:&error];
             if (!result) {
-                NSLog(@"[OpenWebRTC] ERROR! AVAudioSession setActive failed");
+                NSLog(@"[OpenWebRTC] ERROR! AVAudioSession setActive: failed %@", error);
             }
 
             NSLog(@"[OpenWebRTC] initialized correctly!");
